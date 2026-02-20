@@ -495,6 +495,7 @@
   let isPlaying = false;
   let audioCtx = null;
   let stopRequested = false;
+  let activeOscillators = [];
 
   // --- Conversion ---
   function textToMorse(text) {
@@ -637,6 +638,11 @@
     gain.connect(audioCtx.destination);
     osc.start(startTime);
     osc.stop(startTime + duration);
+    activeOscillators.push(osc);
+    osc.onended = function() {
+      const idx = activeOscillators.indexOf(osc);
+      if (idx !== -1) activeOscillators.splice(idx, 1);
+    };
   }
 
   async function playMorse() {
@@ -730,6 +736,8 @@
   }
 
   function finishPlayback(symElements) {
+    activeOscillators.forEach(function(o) { try { o.stop(); } catch(e) {} });
+    activeOscillators = [];
     isPlaying = false;
     stopRequested = false;
     playBtn.classList.remove('playing');
