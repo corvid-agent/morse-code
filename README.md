@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/preview.png" alt="morse-code preview" width="100%"></p>
+
 # Morse Code
 
 Morse code translator with audio playback.
